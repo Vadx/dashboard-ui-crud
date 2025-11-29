@@ -37,8 +37,12 @@ export function LoginForm() {
 
     try {
       const response = await api.login(data.username, data.password);
-      setAuth(response.token, response.refreshToken, response);
-      navigate("/");
+      // API returns accessToken, not token
+      setAuth(response.accessToken, response.refreshToken, response);
+      navigate("/", { replace: true });
+      // setTimeout(() => {
+      //   navigate("/", { replace: true });
+      // }, 0);
     } catch (err) {
       setError("Invalid username or password");
     } finally {
