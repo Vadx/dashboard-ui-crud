@@ -1,3 +1,4 @@
+import { LoginForm } from "@/components/login-form";
 import type { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {
@@ -8,5 +9,5 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Login() {
-  return <>Login</>;
+  return <LoginForm />;
 }

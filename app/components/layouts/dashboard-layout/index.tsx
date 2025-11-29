@@ -13,9 +13,16 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { Outlet } from "react-router";
+import { useAuthStore } from "@/store/auth-store";
+import { Navigate, Outlet } from "react-router";
 
 export default function DashboardLayout() {
+  const token = useAuthStore((state) => state.token);
+
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+
   return (
     <SidebarProvider>
       <AppSidebar />

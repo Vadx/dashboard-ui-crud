@@ -1,12 +1,19 @@
-import { Outlet } from "react-router";
-// import Logo from "~/components/logo";
+import Logo from "@/components/logo";
+import { useAuthStore } from "@/store/auth-store";
+import { Navigate, Outlet } from "react-router";
 
 const LayoutAuth = () => {
+  const token = useAuthStore((state) => state.token);
+
+  if (token) {
+    return <Navigate to="/" replace />;
+  }
+
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-2">
         <span className="flex items-center self-center">
-          {/* <Logo size="large" /> */}Logo
+          <Logo size="large" />
         </span>
         <Outlet />
       </div>

@@ -10,7 +10,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import Logo from "@/components/logo";
-import { Home, Bell, ChevronsUpDown } from "lucide-react";
+import { Home, Users, SquareChartGantt } from "lucide-react";
 
 const data = {
   user: {
@@ -22,17 +22,17 @@ const data = {
     {
       title: "Home",
       url: "/",
-      icons: Home,
+      icon: Home,
     },
     {
       title: "Products",
       url: "/products",
-      icons: Bell,
+      icon: SquareChartGantt,
     },
     {
       title: "Users",
       url: "/users",
-      icons: ChevronsUpDown,
+      icon: Users,
     },
   ],
 };
