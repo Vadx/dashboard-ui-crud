@@ -1,3 +1,4 @@
+import { UsersList } from "@/components/users-list";
 import type { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {
@@ -8,5 +9,5 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Users() {
-  return <>Users</>;
+  return <UsersList />;
 }

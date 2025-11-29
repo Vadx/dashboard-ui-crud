@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { NavLink } from "react-router";
 import { Button } from "./ui/button";
-import { Users, SquareChartGantt, icons } from "lucide-react";
+import { Users, SquareChartGantt } from "lucide-react";
 
 const navList = [
   {
