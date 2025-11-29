@@ -1,3 +1,4 @@
+import { ProductsList } from "@/components/products-list";
 import type { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {
@@ -8,5 +9,5 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Products() {
-  return <>Products</>;
+  return <ProductsList />;
 }
