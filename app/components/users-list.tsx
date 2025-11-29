@@ -216,7 +216,9 @@ export function UsersList() {
                           <CardTitle className="text-lg">
                             {user.firstName} {user.lastName}
                           </CardTitle>
-                          <CardDescription>{user.email}</CardDescription>
+                          <CardDescription className="truncate text-ellipsis break-all text-xs">
+                            {user.email}
+                          </CardDescription>
                         </div>
                       </div>
                     </div>

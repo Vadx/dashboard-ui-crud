@@ -1,5 +1,5 @@
-import HomeCards from "@/components/home-cards";
 import type { Route } from "./+types/home";
+import { HomeWelcomeCard } from "@/components/home-welcome-card";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -9,5 +9,9 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  return <HomeCards />;
+  return (
+    <>
+      <HomeWelcomeCard />
+    </>
+  );
 }
