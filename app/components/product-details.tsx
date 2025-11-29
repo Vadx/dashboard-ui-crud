@@ -51,7 +51,9 @@ export function ProductDetails() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">{product.title}</h1>
+          <h1 className="text-3xl text-slate-900 italic font-normal">
+            {product.title}
+          </h1>
           <p className="text-slate-600 font-light text-sm">Product Details</p>
         </div>
       </div>
