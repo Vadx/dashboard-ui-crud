@@ -1,4 +1,4 @@
-import { LoginForm } from "@/components/login-form";
+import { LoginForm } from "@/features/login";
 import type { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {

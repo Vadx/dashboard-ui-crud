@@ -1,4 +1,4 @@
-import { ProductsList } from "@/components/products-list";
+import { ProductsList } from "@/features/products";
 import type { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {

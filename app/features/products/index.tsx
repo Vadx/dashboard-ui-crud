@@ -32,7 +32,7 @@ import {
 } from "lucide-react";
 import { ProductDrawerForm } from "@/components/product-drawer-form";
 import { ConfirmationDialog } from "@/components/confirmation-dialog";
-import SkeletonList from "./ui/skeleton-list";
+import SkeletonList from "@/components/ui/skeleton-list";
 import { toast } from "sonner";
 
 interface Product {
