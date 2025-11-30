@@ -14,16 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-
-interface Product {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  brand: string;
-  category: string;
-  stock: number;
-}
+import type { IProduct } from "@/types/product";
 
 interface ProductFormData {
   title: string;
@@ -37,7 +28,7 @@ interface ProductFormData {
 interface ProductDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  product: Product | null;
+  product: IProduct | null;
   onSuccess: () => void;
 }
 
@@ -85,8 +76,10 @@ export function ProductDrawerForm({
       toast.success("Product saved successfully");
     } catch (error) {
       console.error("Failed to save product:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred";
       toast.error("Failed to save product", {
-        description: `${(error as Error).message}`,
+        description: errorMessage,
       });
     }
   };
