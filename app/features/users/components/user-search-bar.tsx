@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 
 interface UserSearchBarProps {
   initialValue: string;
@@ -13,6 +13,11 @@ export function UserSearchBar({ initialValue, onSearch }: UserSearchBarProps) {
 
   const handleSearch = () => {
     onSearch(searchInput);
+  };
+
+  const handleClear = () => {
+    setSearchInput("");
+    onSearch("");
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -30,8 +35,17 @@ export function UserSearchBar({ initialValue, onSearch }: UserSearchBarProps) {
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="pl-10"
+          className="pl-10 pr-10"
         />
+        {searchInput && (
+          <button
+            onClick={handleClear}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+            aria-label="Clear search"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
       </div>
       <Button onClick={handleSearch}>Search</Button>
     </div>
