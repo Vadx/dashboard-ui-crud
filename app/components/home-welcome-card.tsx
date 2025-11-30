@@ -10,6 +10,7 @@ import {
 import { Package, Users, TrendingUp } from "lucide-react";
 import { NavLink } from "react-router";
 import { Button } from "./ui/button";
+import Img from "/logo.png?url";
 
 export function HomeWelcomeCard() {
   const user = useAuthStore((state) => state.user);
@@ -23,6 +24,7 @@ export function HomeWelcomeCard() {
       color: "text-blue-600",
       bgColor: "bg-blue-100",
       link: "/products",
+      disable: false,
     },
     {
       title: "Total Users",
@@ -32,6 +34,7 @@ export function HomeWelcomeCard() {
       color: "text-green-600",
       bgColor: "bg-green-100",
       link: "/users",
+      disable: false,
     },
     {
       title: "Growth",
@@ -41,13 +44,18 @@ export function HomeWelcomeCard() {
       color: "text-orange-600",
       bgColor: "bg-orange-100",
       link: "/",
+      disable: true,
     },
   ];
 
   return (
     <div className="space-y-8">
-      <div className="text-center">
-        <h1 className="text-4xl font-normal text-slate-900 pt-5">
+      <div className="bg-[#f4f3f3] p-2 rounded-md w-full flex justify-start items-center gap-6 flex-col md:flex-row">
+        <img src={Img} alt="Logo" className="mx-auto h-auto w-50" />
+      </div>
+
+      <div className="text-center text-[#447466] px-10 border-b pb-6">
+        <h1 className="text-4xl font-normal italic">
           Welcome back, <span className="font-semibold">{user?.firstName}</span>
           !
         </h1>
@@ -86,6 +94,7 @@ export function HomeWelcomeCard() {
                     size="lg"
                     className="w-full font-medium"
                     variant="outline"
+                    disabled={stat.disable}
                   >
                     See all {stat.title}
                   </Button>

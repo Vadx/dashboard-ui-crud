@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 interface Product {
   id: number;
@@ -81,8 +82,12 @@ export function ProductDrawerForm({
       onSuccess();
       onOpenChange(false);
       reset();
+      toast.success("Product saved successfully");
     } catch (error) {
       console.error("Failed to save product:", error);
+      toast.error("Failed to save product", {
+        description: `${(error as Error).message}`,
+      });
     }
   };
 

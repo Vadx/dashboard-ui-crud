@@ -42,6 +42,7 @@ import {
 } from "lucide-react";
 import { ProductDrawerForm } from "@/components/product-drawer-form";
 import SkeletonList from "./ui/skeleton-list";
+import { toast } from "sonner";
 
 interface Product {
   id: number;
@@ -118,8 +119,12 @@ export function ProductsList() {
       mutate(url);
       setDeleteDialogOpen(false);
       setProductToDelete(null);
+      toast.success("Product deleted successfully");
     } catch (error) {
       console.error("Failed to delete product:", error);
+      toast.error("Failed to delete product", {
+        description: `${(error as Error).message}`,
+      });
     }
   };
 
@@ -208,7 +213,9 @@ export function ProductsList() {
                       />
                     </TableCell>
                     <TableCell className="font-medium">
-                      {product.title}
+                      <Link to={`/products/${product.id}`}>
+                        {product.title}
+                      </Link>
                     </TableCell>
                     <TableCell>{product.brand}</TableCell>
                     <TableCell>{product.category}</TableCell>

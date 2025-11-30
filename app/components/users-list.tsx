@@ -34,13 +34,13 @@ import { Badge } from "@/components/ui/badge";
 import {
   Plus,
   Search,
-  Eye,
   Edit,
   Trash2,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
 import { UserDrawerForm } from "@/components/user-drawer-form";
+import { toast } from "sonner";
 
 interface IUser {
   id: number;
@@ -70,7 +70,7 @@ export function UsersList() {
 
   const [searchInput, setSearchInput] = useState(search);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [editingUser, setEditingUser] = useState<IUser | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<number | null>(null);
 
@@ -109,7 +109,7 @@ export function UsersList() {
     setDrawerOpen(true);
   };
 
-  const handleEdit = (user: User) => {
+  const handleEdit = (user: IUser) => {
     setEditingUser(user);
     setDrawerOpen(true);
   };
@@ -122,8 +122,12 @@ export function UsersList() {
       mutate(url);
       setDeleteDialogOpen(false);
       setUserToDelete(null);
+      toast.success("User deleted successfully");
     } catch (error) {
       console.error("Failed to delete user:", error);
+      toast.error("Failed to delete user", {
+        description: `${(error as Error).message}`,
+      });
     }
   };
 

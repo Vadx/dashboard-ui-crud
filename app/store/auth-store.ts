@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-interface IUser {
+interface IAuthUser {
   id: number;
   username: string;
   email: string;
@@ -14,8 +14,8 @@ interface IUser {
 interface AuthState {
   token: string | null;
   refreshToken: string | null;
-  user: IUser | null;
-  setAuth: (token: string, refreshToken: string, user: IUser) => void;
+  user: IAuthUser | null;
+  setAuth: (token: string, refreshToken: string, user: IAuthUser) => void;
   clearAuth: () => void;
 }
 

@@ -22,8 +22,12 @@ export function ProductDetails() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <p className="text-slate-600">Loading product details...</p>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-gray-200 animate-pulse space-y-4"></div>
+        <div className="grid grid-cols-1 gap-6">
+          <div className="h-80 bg-gray-200 rounded-lg" />
+          <div className="h-60 bg-gray-200 rounded-lg" />
+        </div>
       </div>
     );
   }

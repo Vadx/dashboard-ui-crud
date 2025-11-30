@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
 
 interface User {
   id: number;
@@ -97,8 +98,12 @@ export function UserDrawerForm({
       onSuccess();
       onOpenChange(false);
       reset();
+      toast.success("User saved successfully");
     } catch (error) {
       console.error("Failed to save user:", error);
+      toast.error("Failed to save user", {
+        description: `${(error as Error).message}`,
+      });
     }
   };
 
