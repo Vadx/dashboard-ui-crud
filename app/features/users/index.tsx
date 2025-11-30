@@ -1,116 +1,46 @@
-import { useState } from "react";
-import { useSearchParams } from "react-router";
-import useSWR, { mutate } from "swr";
-import { useAuthStore } from "@/store/auth-store";
+import useSWR from "swr";
 import { api, fetcher } from "@/lib/api";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import {
-  Plus,
-  Search,
-  Edit,
-  Trash2,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Plus } from "lucide-react";
 import { UserDrawerForm } from "@/components/user-drawer-form";
 import { ConfirmationDialog } from "@/components/confirmation-dialog";
-import { toast } from "sonner";
-import type { IUser } from "@/types/user";
+import { UserFilters } from "./components/user-filters";
+import { UserGrid } from "./components/user-grid";
+import { UserPagination } from "./components/user-pagination";
+import { UserLoadingSkeleton } from "./components/user-loading-skeleton";
+import { useUserParams } from "./hooks/use-user-params";
+import { useUserActions } from "./hooks/use-user-actions";
 
 export function UsersList() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const token = useAuthStore((state) => state.token);
-
-  const page = parseInt(searchParams.get("page") || "1");
-  const limit = parseInt(searchParams.get("limit") || "12");
-  const search = searchParams.get("search") || "";
-  const sortBy = searchParams.get("sortBy") || "";
-  const order = searchParams.get("order") || "";
-
-  const [searchInput, setSearchInput] = useState(search);
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [editingUser, setEditingUser] = useState<IUser | null>(null);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [userToDelete, setUserToDelete] = useState<number | null>(null);
+  const {
+    page,
+    limit,
+    search,
+    sortBy,
+    order,
+    updateSearch,
+    updateSort,
+    updatePage,
+  } = useUserParams();
 
   const skip = (page - 1) * limit;
   const url = api.getUsers(limit, skip, search, sortBy, order);
 
   const { data, error, isLoading } = useSWR(url, fetcher);
 
-  const handleSearch = () => {
-    const params = new URLSearchParams(searchParams);
-    if (searchInput) {
-      params.set("search", searchInput);
-    } else {
-      params.delete("search");
-    }
-    params.set("page", "1");
-    setSearchParams(params);
-  };
-
-  const handleSort = (field: string) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("sortBy", field);
-    params.set("order", order === "asc" ? "desc" : "asc");
-    params.set("page", "1");
-    setSearchParams(params);
-  };
-
-  const handlePageChange = (newPage: number) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("page", newPage.toString());
-    setSearchParams(params);
-  };
-
-  const handleCreate = () => {
-    setEditingUser(null);
-    setDrawerOpen(true);
-  };
-
-  const handleEdit = (user: IUser) => {
-    setEditingUser(user);
-    setDrawerOpen(true);
-  };
-
-  const handleDelete = async () => {
-    if (!userToDelete || !token) return;
-
-    try {
-      await api.deleteUser(userToDelete, token);
-      mutate(url);
-      setDeleteDialogOpen(false);
-      setUserToDelete(null);
-      toast.success("User deleted successfully");
-    } catch (error) {
-      console.error("Failed to delete user:", error);
-      toast.error("Failed to delete user", {
-        description: `${(error as Error).message}`,
-      });
-    }
-  };
-
-  const openDeleteDialog = (id: number) => {
-    setUserToDelete(id);
-    setDeleteDialogOpen(true);
-  };
+  const {
+    drawerOpen,
+    setDrawerOpen,
+    editingUser,
+    deleteDialogOpen,
+    setDeleteDialogOpen,
+    handleCreate,
+    handleEdit,
+    openDeleteDialog,
+    handleDelete,
+    handleSuccess,
+  } = useUserActions({ url });
 
   const totalPages = data ? Math.ceil(data.total / limit) : 0;
 
@@ -130,44 +60,15 @@ export function UsersList() {
       </div>
 
       <Card className="p-6">
-        <div className="flex items-center gap-4 mb-6">
-          <div className="flex-1 flex items-center gap-2">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
-              <Input
-                placeholder="Search users..."
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                className="pl-10"
-              />
-            </div>
-            <Button onClick={handleSearch}>Search</Button>
-          </div>
+        <UserFilters
+          searchValue={search}
+          sortValue={sortBy}
+          onSearch={updateSearch}
+          onSort={updateSort}
+        />
 
-          <Select value={sortBy} onValueChange={(value) => handleSort(value)}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Sort by..." />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="firstName">First Name</SelectItem>
-              <SelectItem value="lastName">Last Name</SelectItem>
-              <SelectItem value="email">Email</SelectItem>
-              <SelectItem value="age">Age</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        {isLoading && <UserLoadingSkeleton count={limit} />}
 
-        {isLoading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(limit)].map((_, index) => (
-              <div
-                key={index}
-                className="h-64 bg-slate-100 animate-pulse rounded-lg"
-              ></div>
-            ))}
-          </div>
-        )}
         {error && (
           <div className="text-center py-8 text-destructive">
             Failed to load users
@@ -176,115 +77,19 @@ export function UsersList() {
 
         {data && (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {data.users.map((user: IUser) => (
-                <Card
-                  key={user.id}
-                  className="hover:shadow-lg transition-shadow"
-                >
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-12 w-12">
-                          <AvatarImage src={user.image} alt={user.firstName} />
-                          <AvatarFallback>
-                            {user.firstName[0]}
-                            {user.lastName[0]}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <CardTitle className="text-lg">
-                            {user.firstName} {user.lastName}
-                          </CardTitle>
-                          <CardDescription className="truncate text-ellipsis break-all text-xs">
-                            {user.email}
-                          </CardDescription>
-                        </div>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-slate-600">Age</span>
-                      <span className="font-medium">{user.age}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-slate-600">Phone</span>
-                      <span className="font-medium">{user.phone}</span>
-                    </div>
-                    {user.company && (
-                      <>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-slate-600">Company</span>
-                          <span className="font-medium">
-                            {user.company.name}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-slate-600">Title</span>
-                          <span className="font-medium">
-                            {user.company.title}
-                          </span>
-                        </div>
-                      </>
-                    )}
-                    {user.role && (
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-slate-600">Role</span>
-                        <Badge variant="secondary">{user.role}</Badge>
-                      </div>
-                    )}
-                    <div className="flex items-center justify-end gap-2 pt-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleEdit(user)}
-                      >
-                        <Edit className="h-4 w-4 mr-1" />
-                        Edit
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => openDeleteDialog(user.id)}
-                      >
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            <UserGrid
+              users={data.users}
+              onEdit={handleEdit}
+              onDelete={openDeleteDialog}
+            />
 
-            <div className="flex items-center justify-between mt-6">
-              <p className="text-sm text-slate-600">
-                Showing {skip + 1} to {Math.min(skip + limit, data.total)} of{" "}
-                {data.total} users
-              </p>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handlePageChange(page - 1)}
-                  disabled={page === 1}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                  Previous
-                </Button>
-                <span className="text-sm">
-                  Page {page} of {totalPages}
-                </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handlePageChange(page + 1)}
-                  disabled={page >= totalPages}
-                >
-                  Next
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
+            <UserPagination
+              currentPage={page}
+              totalPages={totalPages}
+              totalItems={data.total}
+              itemsPerPage={limit}
+              onPageChange={updatePage}
+            />
           </>
         )}
       </Card>
@@ -293,7 +98,7 @@ export function UsersList() {
         open={drawerOpen}
         onOpenChange={setDrawerOpen}
         user={editingUser}
-        onSuccess={() => mutate(url)}
+        onSuccess={handleSuccess}
       />
 
       <ConfirmationDialog
