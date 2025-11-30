@@ -34,17 +34,7 @@ import { ProductDrawerForm } from "@/components/product-drawer-form";
 import { ConfirmationDialog } from "@/components/confirmation-dialog";
 import SkeletonList from "@/components/ui/skeleton-list";
 import { toast } from "sonner";
-
-interface Product {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  brand: string;
-  category: string;
-  stock: number;
-  thumbnail: string;
-}
+import type { IProduct } from "@/types/product";
 
 export function ProductsList() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -58,7 +48,7 @@ export function ProductsList() {
 
   const [searchInput, setSearchInput] = useState(search);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [editingProduct, setEditingProduct] = useState<IProduct | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<number | null>(null);
 
@@ -97,7 +87,7 @@ export function ProductsList() {
     setDrawerOpen(true);
   };
 
-  const handleEdit = (product: Product) => {
+  const handleEdit = (product: IProduct) => {
     setEditingProduct(product);
     setDrawerOpen(true);
   };
@@ -194,7 +184,7 @@ export function ProductsList() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {data.products.map((product: Product) => (
+                {data.products.map((product: IProduct) => (
                   <TableRow key={product.id}>
                     <TableCell>
                       <img

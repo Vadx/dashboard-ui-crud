@@ -32,22 +32,7 @@ import {
 import { UserDrawerForm } from "@/components/user-drawer-form";
 import { ConfirmationDialog } from "@/components/confirmation-dialog";
 import { toast } from "sonner";
-
-interface IUser {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  age: number;
-  gender: string;
-  image: string;
-  role: string;
-  company: {
-    name: string;
-    title: string;
-  };
-}
+import type { IUser } from "@/types/user";
 
 export function UsersList() {
   const [searchParams, setSearchParams] = useSearchParams();

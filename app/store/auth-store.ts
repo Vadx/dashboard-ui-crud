@@ -1,15 +1,6 @@
+import type { IAuthUser } from "@/types/auth-user";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
-interface IAuthUser {
-  id: number;
-  username: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  gender: string;
-  image: string;
-}
 
 interface AuthState {
   token: string | null;
